@@ -1,0 +1,20 @@
+{
+  "docker-project": {
+    "projects": [
+      {
+        "name": "chatmock-fnos",
+        "path": "docker"
+      }
+    ]
+  },
+  "data-share": {
+    "shares": [
+      {
+        "name": "chatmock-fnos"
+      },
+      {
+        "name": "chatmock-fnos/data"
+      }
+    ]
+  }
+}

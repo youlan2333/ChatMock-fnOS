@@ -1,0 +1,4 @@
+#!/bin/bash
+
+mkdir -p "${TRIM_PKGVAR}/data"
+exit 0

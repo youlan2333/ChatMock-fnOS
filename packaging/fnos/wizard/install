@@ -1,0 +1,19 @@
+[
+  {
+    "stepTitle": "欢迎安装 ChatMock",
+    "items": [
+      {
+        "type": "tips",
+        "helpText": "本应用会从 Docker Hub 拉取 storagetime/chatmock:latest，并在 8000 端口提供 OpenAI 与 Ollama 兼容 API。"
+      },
+      {
+        "type": "tips",
+        "helpText": "首次安装后必须通过 SSH 执行 sudo bash /var/apps/chatmock-fnos/target/login.sh 完成 ChatGPT OAuth 授权。"
+      },
+      {
+        "type": "tips",
+        "helpText": "安全提示：应用自身未配置入站 API 密钥验证，请勿把 8000 端口直接暴露到公网。"
+      }
+    ]
+  }
+]

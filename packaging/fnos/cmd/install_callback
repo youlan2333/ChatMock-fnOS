@@ -1,0 +1,10 @@
+#!/bin/bash
+
+mkdir -p "${TRIM_PKGVAR}/data"
+
+cat > "${TRIM_TEMP_LOGFILE:-/tmp/chatmock-fnos-install.log}" <<'EOF'
+ChatMock 已安装。首次使用请通过 SSH 执行：
+sudo bash /var/apps/chatmock-fnos/target/login.sh
+EOF
+
+exit 0

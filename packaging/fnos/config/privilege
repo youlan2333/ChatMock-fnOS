@@ -1,0 +1,8 @@
+{
+    "defaults":
+    {
+        "run-as": "package"
+    },
+    "username": "docker-chatmock-fnos",
+    "groupname": "docker-chatmock-fnos"
+}

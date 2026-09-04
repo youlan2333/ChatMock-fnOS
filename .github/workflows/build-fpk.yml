@@ -1,0 +1,68 @@
+name: Build fnOS FPK
+
+on:
+  push:
+    branches: [main]
+    tags: ["v*"]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: windows-latest
+    env:
+      FNPACK_VERSION: "1.2.3"
+      FNPACK_SHA256: "D7AF4BD716B009C58F5BCD931615F39DB121E7D4B75DC759E575C4FB2879B6EE"
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Download verified fnpack
+        shell: pwsh
+        run: |
+          $url = "https://static2.fnnas.com/fnpack/fnpack-$env:FNPACK_VERSION-windows-amd64"
+          Invoke-WebRequest -Uri $url -OutFile fnpack.exe
+          $actual = (Get-FileHash .\fnpack.exe -Algorithm SHA256).Hash
+          if ($actual -ne $env:FNPACK_SHA256) {
+            throw "fnpack checksum mismatch: $actual"
+          }
+
+      - name: Build FPK
+        id: build
+        shell: pwsh
+        run: |
+          & .\fnpack.exe build --directory .\packaging\fnos
+          if (-not (Test-Path .\chatmock-fnos.fpk)) {
+            throw "Expected chatmock-fnos.fpk was not produced"
+          }
+          $manifest = Get-Content .\packaging\fnos\manifest
+          $versionLine = $manifest | Where-Object { $_ -match '^version\s*=' } | Select-Object -First 1
+          $version = ($versionLine -split '=', 2)[1].Trim()
+          $asset = "ChatMock-$version-fnOS-all.fpk"
+          Copy-Item .\chatmock-fnos.fpk $asset
+          "asset=$asset" >> $env:GITHUB_OUTPUT
+
+      - name: Upload build artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: chatmock-fnos-fpk
+          path: ${{ steps.build.outputs.asset }}
+          if-no-files-found: error
+
+      - name: Attach FPK to GitHub Release
+        if: startsWith(github.ref, 'refs/tags/')
+        shell: pwsh
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          $tag = $env:GITHUB_REF_NAME
+          gh release view $tag --repo $env:GITHUB_REPOSITORY *> $null
+          if ($LASTEXITCODE -ne 0) {
+            gh release create $tag --repo $env:GITHUB_REPOSITORY --title $tag --generate-notes
+          }
+          gh release upload $tag "${{ steps.build.outputs.asset }}" --repo $env:GITHUB_REPOSITORY --clobber

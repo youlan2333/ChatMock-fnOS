@@ -1,0 +1,44 @@
+services:
+  chatmock:
+    image: storagetime/chatmock:latest
+    container_name: chatmock-fnos
+    command: ["serve"]
+    restart: unless-stopped
+    environment:
+      CHATGPT_LOCAL_HOME: /data
+      PORT: "8000"
+      VERBOSE: "false"
+      CHATGPT_LOCAL_REASONING_EFFORT: medium
+      CHATGPT_LOCAL_REASONING_SUMMARY: auto
+      CHATGPT_LOCAL_REASONING_COMPAT: think-tags
+      CHATGPT_LOCAL_FAST_MODE: "false"
+      CHATGPT_LOCAL_EXPOSE_REASONING_MODELS: "false"
+      CHATGPT_LOCAL_ENABLE_WEB_SEARCH: "false"
+      CHATGPT_LOCAL_MODEL_SYNC: "true"
+      CHATGPT_LOCAL_MODEL_REFRESH_INTERVAL: "3600"
+    ports:
+      - "8000:8000"
+    volumes:
+      - "${TRIM_PKGVAR}/data:/data"
+    healthcheck:
+      test:
+        - CMD-SHELL
+        - >-
+          python -c "import urllib.request,sys;
+          sys.exit(0 if urllib.request.urlopen('http://127.0.0.1:8000/health').status==200 else 1)"
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 5s
+
+  chatmock-login:
+    image: storagetime/chatmock:latest
+    profiles: ["login"]
+    entrypoint: ["chatmock"]
+    command: ["login", "--headless"]
+    stdin_open: true
+    tty: true
+    environment:
+      CHATGPT_LOCAL_HOME: /data
+    volumes:
+      - "${TRIM_PKGVAR}/data:/data"
