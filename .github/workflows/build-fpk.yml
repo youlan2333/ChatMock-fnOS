@@ -45,13 +45,19 @@ jobs:
           $version = ($versionLine -split '=', 2)[1].Trim()
           $asset = "ChatMock-$version-fnOS-all.fpk"
           Copy-Item .\chatmock-fnos.fpk $asset
+          $digest = (Get-FileHash $asset -Algorithm SHA256).Hash.ToLowerInvariant()
+          $checksum = "$asset.sha256"
+          "$digest  $asset" | Set-Content -NoNewline $checksum
           "asset=$asset" >> $env:GITHUB_OUTPUT
+          "checksum=$checksum" >> $env:GITHUB_OUTPUT
 
       - name: Upload build artifact
         uses: actions/upload-artifact@v4
         with:
           name: chatmock-fnos-fpk
-          path: ${{ steps.build.outputs.asset }}
+          path: |
+            ${{ steps.build.outputs.asset }}
+            ${{ steps.build.outputs.checksum }}
           if-no-files-found: error
 
       - name: Attach FPK to GitHub Release
@@ -65,4 +71,4 @@ jobs:
           if ($LASTEXITCODE -ne 0) {
             gh release create $tag --repo $env:GITHUB_REPOSITORY --title $tag --generate-notes
           }
-          gh release upload $tag "${{ steps.build.outputs.asset }}" --repo $env:GITHUB_REPOSITORY --clobber
+          gh release upload $tag "${{ steps.build.outputs.asset }}" "${{ steps.build.outputs.checksum }}" --repo $env:GITHUB_REPOSITORY --clobber
