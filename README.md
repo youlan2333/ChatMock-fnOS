@@ -36,7 +36,7 @@
 也可以通过 SSH 安装：
 
 ```bash
-sudo appcenter-cli install-fpk ChatMock-1.0.0-fnOS-all.fpk
+sudo appcenter-cli install-fpk ChatMock-1.0.1-fnOS-all.fpk
 ```
 
 ## 首次登录
@@ -140,7 +140,7 @@ sudo bash /var/apps/chatmock-fnos/target/login.sh
 
 ### 端口 8000 被占用
 
-当前 1.0.0 FPK 使用固定端口 `8000`。请先停止占用该端口的服务。后续版本计划加入安装向导端口配置。
+当前 FPK 使用固定端口 `8000`。请先停止占用该端口的服务。后续版本计划加入安装向导端口配置。
 
 ### 应用显示运行但请求失败
 
