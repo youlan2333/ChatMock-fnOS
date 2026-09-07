@@ -3,7 +3,7 @@
     "chatmock-fnos.Application": {
       "title": "ChatMock",
       "desc": "ChatMock 状态与使用说明",
-      "icon": "images/icon_{0}.png",
+      "icon": "images/icon_v1_0_3_{0}.png",
       "type": "url",
       "url": "/cgi/ThirdParty/chatmock-fnos/index.cgi/",
       "allUsers": false

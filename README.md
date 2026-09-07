@@ -36,7 +36,7 @@
 也可以通过 SSH 安装：
 
 ```bash
-sudo appcenter-cli install-fpk ChatMock-1.0.2-fnOS-all.fpk
+sudo appcenter-cli install-fpk ChatMock-1.0.3-fnOS-all.fpk
 ```
 
 ## 首次登录
@@ -121,6 +121,20 @@ OAuth 文件包含敏感凭据。不要备份到公开目录，也不要提交�
 上游曾出现远程 Docker OAuth 回调与认证数据持久化问题，分别见 [Issue #26](https://github.com/RayBytes/ChatMock/issues/26) 和 [Issue #68](https://github.com/RayBytes/ChatMock/issues/68)。本 FPK 使用设备码登录，并将 `/data` 映射到 fnOS 持久化目录，以规避这两类部署问题。
 
 ## 故障排查
+
+### 应用中心图标已更新，桌面仍显示旧图标
+
+应用中心图标与桌面入口图标使用不同路径。1.0.2 包内两组图标内容一致，但旧版本一直复用桌面路径 `images/icon_{0}.png`，可能继续命中旧图片缓存。1.0.3 将桌面配置改为 `images/icon_v1_0_3_{0}.png`，使更新后的入口请求新路径。该变更已验证打包内容，尚不能代替 NAS 桌面的实机验证。
+
+升级后重新登录飞牛桌面。若仍不一致，可通过 SSH 执行以下只读检查：
+
+```bash
+sudo grep -n '"icon"' /var/apps/chatmock-fnos/target/ui/config
+sudo sha256sum /var/apps/chatmock-fnos/target/ui/images/icon_v1_0_3_64.png
+sudo sha256sum /var/apps/chatmock-fnos/target/ui/images/icon_v1_0_3_256.png
+```
+
+配置应引用 `images/icon_v1_0_3_{0}.png`。检查结果不含登录凭据；可将它与桌面截图一起提供，以区分安装资源、入口缓存和桌面渲染问题。无需为刷新图标卸载应用。
 
 ### 镜像拉取失败
 
