@@ -36,7 +36,7 @@
 也可以通过 SSH 安装：
 
 ```bash
-sudo appcenter-cli install-fpk ChatMock-1.0.1-fnOS-all.fpk
+sudo appcenter-cli install-fpk ChatMock-1.0.2-fnOS-all.fpk
 ```
 
 ## 首次登录
