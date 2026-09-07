@@ -97,15 +97,15 @@ $backgroundBrush = $null
 try {
     $logoData = Get-LogoLayer -Source $source
 
-    # Render at 4x and downsample. The visible tile occupies 87.5% of the
-    # canvas and uses a 23% corner radius so all four corners remain obvious
-    # when fnOS displays the 64px asset.
+    # Render at 4x and downsample. Fill the canvas without outer padding so
+    # the tile uses the full fnOS desktop icon size; only the rounded corners
+    # are transparent. Keep the same radius on all four corners.
     $scale = 4
     $masterSize = 256 * $scale
-    $tileMargin = 16 * $scale
+    $tileMargin = 0
     $tileSize = $masterSize - (2 * $tileMargin)
     $cornerRadius = 52 * $scale
-    $logoWidth = 160 * $scale
+    $logoWidth = 184 * $scale
 
     $master = [System.Drawing.Bitmap]::new($masterSize, $masterSize, [System.Drawing.Imaging.PixelFormat]::Format32bppArgb)
     $graphics = [System.Drawing.Graphics]::FromImage($master)

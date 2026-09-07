@@ -1,5 +1,5 @@
 appname=chatmock-fnos
-version=1.0.3
+version=1.0.4
 display_name=ChatMock
 desc=将 ChatGPT 账号能力提供为 OpenAI 与 Ollama 兼容 API。非官方第三方封装，首次使用需要通过 SSH 完成 OAuth 登录。
 platform=all
@@ -15,4 +15,4 @@ service_port=8000
 checkport=true
 ctl_stop=true
 disable_authorization_path=true
-changelog=为桌面图标使用版本化资源路径，避免升级后复用旧路径的图标缓存。
+changelog=去除图标额外透明边距，恢复桌面正常大小并放大 CM，保留对称圆角与版本化图片路径。
